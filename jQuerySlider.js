@@ -21,8 +21,8 @@
                           "background-position": "top center",
                           "background-size": "cover",
                           "width":"100%",
-                          "height":"450px"}), 
-        pluginName = 'jQuerySlider',
+                          "height":"450px"}}, 
+        pluginName = 'jQuerySlider';
 
     // create the utility container divs used to hold the background images,
     // list the current options in a comment, and start the slideshow
@@ -41,12 +41,12 @@
       base.containers = Array();
       base.containers[0] = $(document.createElement('div'))
                             .addClass('jqueryslider-slide')
-                            .css(css)
+                            .css(base.o.css)
                             .css({"z-index":"-1",                                  
                                   'background-image':'url("' + base.imgs[0] + '")'});
       base.containers[1] = $(document.createElement('div'))
                             .addClass('jqueryslider-slide')
-                            .css(css)
+                            .css(base.o.css)
                             .css({"z-index":"-2",
                                   'background-image':'url("' + base.imgs[1] + '")'});
       base.displayOptions = "<!-- ";
