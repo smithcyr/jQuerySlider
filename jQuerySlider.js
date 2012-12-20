@@ -1,14 +1,16 @@
-/* jQuerySlider by Cyrus Smith (http://coding-contemplation.blogspot.com)
+/* jQuerySlider by Cyrus Smith 
+ * (http://coding-contemplation.blogspot.com) 
+ * (https://github.com/smithcyr)
  * 
  * Unlike other image sliders this jQuery plugin uses the transition between
  * two divs to create a slideshow of background images. 
  * Created for use on http://grinnellultimate.com
  * 
  * There are three parameters that the user can edit. 
- * interval: (int) the interval in milliseconds between slide transitions
- * duration: (int) the duration of the fade between slides
- * css     : (object) a javascript object with each key as the css parameter 
- *                    and value for the respective parameter
+ * @param int interval - the interval in milliseconds between slide transitions
+ * @param int duration - the duration of the fade between slides
+ * @param object css   - a javascript object with each key as the css parameter 
+ *                       and value for the respective parameter
  * 
  * */
 ;(function( $ ) {
@@ -22,6 +24,8 @@
                           "height":"450px"}), 
         pluginName = 'jQuerySlider',
 
+    // create the utility container divs used to hold the background images,
+    // list the current options in a comment, and start the slideshow
     function Plugin (el, options) {
       if (options.images.length < 2)
         return;
@@ -53,6 +57,9 @@
       this.init();
     };
     
+    // fadeOut the foreground div, iterate its background image to the next one
+    // in queue, switch the two div's z-index, and fadeIn the now-background div 
+    // repeat ad infinitum
     Plugin.prototype.init = function () {
       setInterval(function(){
                     base.current = (base.current + 1) % base.num;
