@@ -1,4 +1,8 @@
-/* jQuerySlider by Cyrus Smith 
+/* This work is licensed under the Creative Commons Attribution-ShareAlike 
+ * 3.0 Unported License. To view a copy of this license, visit 
+ * http://creativecommons.org/licenses/by-sa/3.0/.
+ * 
+ * jQuerySlider by Cyrus Smith 
  * (http://coding-contemplation.blogspot.com) 
  * (https://github.com/smithcyr)
  * 
