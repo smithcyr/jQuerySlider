@@ -11,15 +11,17 @@
  * Created for use on http://grinnellultimate.com
  * 
  * There are three parameters that the user can edit. 
- * @param int interval - the interval in milliseconds between slide transitions
- * @param int duration - the duration of the fade between slides
- * @param object css   - a javascript object with each key as the css parameter 
+ * @param int interval     - the interval in milliseconds between slide transitions
+ * @param int duration     - the duration of the fade between slides
+ * @param color load_color - the initial color of the first slide as the first image is loaded  
+ * @param object css   - a javascript object with each key as the css parameter     
  *                       and value for the respective parameter
  * 
  * */
 ;(function( $ ) {
     var defaults = {interval:10000,
                     duration:500,
+                    load_color:'black',
                     css: {"position":"absolute",
                           "background-repeat":"no-repeat",
                           "background-position": "top center",
@@ -40,24 +42,33 @@
       base.$el = $(el);
       base.imgs = base.o.images;
       base.num = base.o.images.length;
-      base.current = 1;
+      base.current = 0;
       base.topContainer = 0;
       base.containers = Array();
       base.containers[0] = $(document.createElement('div'))
                             .addClass('jqueryslider-slide')
                             .css(base.o.css)
-                            .css({"z-index":"-1",                                  
-                                  'background-image':'url("' + base.imgs[0] + '")'});
+                            .css({"z-index":"-1",
+                                  "background-color",base.o.load_color});
       base.containers[1] = $(document.createElement('div'))
                             .addClass('jqueryslider-slide')
                             .css(base.o.css)
-                            .css({"z-index":"-2",
-                                  'background-image':'url("' + base.imgs[1] + '")'});
+                            .css("z-index":"-2");
       base.displayOptions = "<!-- ";
       for (var key in base.o) 
         base.displayOptions += key + " - " + base.o[key] + ":";
       base.displayOptions += " -->";
       base.$el.append(base.containers[0],base.containers[1],base.displayOptions);
+      base.next_slide = function {
+        base.current = (base.current + 1) % base.num;
+        base.containers[base.topContainer].fadeOut(base.o.duration,function () {
+          $(this).css({'background-image':'url("' + base.imgs[base.current] + '")',
+                       "z-index":"-2"});
+          base.containers[(base.topContainer + 1) % 2].css("z-index","-1");
+          $(this).show();
+          base.topContainer = (base.topContainer + 1) % 2;
+        });
+      }
       this.init();
     };
     
@@ -65,17 +76,10 @@
     // in queue, switch the two div's z-index, and fadeIn the now-background div 
     // repeat ad infinitum
     Plugin.prototype.init = function () {
-      setInterval(function(){
-                    base.current = (base.current + 1) % base.num;
-                    base.containers[base.topContainer].fadeOut(base.o.duration,function () {
-                      $(this).css({'background-image':'url("' + base.imgs[base.current] + '")',
-                                   "z-index":"-2"});
-                      base.containers[(base.topContainer + 1) % 2].css("z-index","-1");
-                      $(this).show();
-                      base.topContainer = (base.topContainer + 1) % 2;
-                    });
-                  },
-                  base.o.interval);
+      $('<img/>').attr('src', base.imgs[base.current]).load(function() {
+        base.containers[1].css('background-image', 'url(' + base.imgs[base.current] + ')');
+        setInterval(base.next_slide,base.o.interval);
+      }
     };
     
    
