@@ -14,8 +14,8 @@
  * @param int interval     - the interval in milliseconds between slide transitions
  * @param int duration     - the duration of the fade between slides
  * @param color load_color - the initial color of the first slide as the first image is loaded  
- * @param object css   - a javascript object with each key as the css parameter     
- *                       and value for the respective parameter
+ * @param object css       - a javascript object with each key as the css parameter     
+ *                           and value for the respective parameter
  * 
  * */
 ;(function( $ ) {
@@ -49,17 +49,19 @@
                             .addClass('jqueryslider-slide')
                             .css(base.o.css)
                             .css({"z-index":"-1",
-                                  "background-color",base.o.load_color});
+                                  "background-color":base.o.load_color});
       base.containers[1] = $(document.createElement('div'))
                             .addClass('jqueryslider-slide')
                             .css(base.o.css)
-                            .css("z-index":"-2");
+                            .css("z-index","-2");
+
       base.displayOptions = "<!-- ";
       for (var key in base.o) 
         base.displayOptions += key + " - " + base.o[key] + ":";
       base.displayOptions += " -->";
+
       base.$el.append(base.containers[0],base.containers[1],base.displayOptions);
-      base.next_slide = function {
+      base.next_slide = function () {
         base.current = (base.current + 1) % base.num;
         base.containers[base.topContainer].fadeOut(base.o.duration,function () {
           $(this).css({'background-image':'url("' + base.imgs[base.current] + '")',
@@ -68,7 +70,7 @@
           $(this).show();
           base.topContainer = (base.topContainer + 1) % 2;
         });
-      }
+      };
       this.init();
     };
     
@@ -78,8 +80,9 @@
     Plugin.prototype.init = function () {
       $('<img/>').attr('src', base.imgs[base.current]).load(function() {
         base.containers[1].css('background-image', 'url(' + base.imgs[base.current] + ')');
-        setInterval(base.next_slide,base.o.interval);
-      }
+        base.next_slide();
+        setInterval(base.next_slide ,base.o.interval);
+      });
     };
     
    
