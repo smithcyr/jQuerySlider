@@ -33,8 +33,6 @@
     // create the utility container divs used to hold the background images,
     // list the current options in a comment, and start the slideshow
     function Plugin (el, options) {
-      if (options.images.length < 2)
-        return;
       base = this;
       base.o = {};
       $.extend(base.o,defaults,options);
@@ -45,15 +43,15 @@
       base.current = 0;
       base.topContainer = 0;
       base.containers = Array();
-      base.containers[0] = $(document.createElement('div'))
+      base.containers.push($(document.createElement('div'))
                             .addClass('jqueryslider-slide')
                             .css(base.o.css)
                             .css({"z-index":"-1",
-                                  "background-color":base.o.load_color});
-      base.containers[1] = $(document.createElement('div'))
+                                  "background-color":base.o.load_color}));
+      base.containers.push($(document.createElement('div'))
                             .addClass('jqueryslider-slide')
                             .css(base.o.css)
-                            .css("z-index","-2");
+                            .css("z-index","-2"));
 
       base.displayOptions = "<!-- ";
       for (var key in base.o) 
@@ -71,15 +69,22 @@
           base.topContainer = (base.topContainer + 1) % 2;
         });
       };
-      this.init();
+      this.init(base);
     };
     
     // fadeOut the foreground div, iterate its background image to the next one
     // in queue, switch the two div's z-index, and fadeIn the now-background div 
     // repeat ad infinitum
-    Plugin.prototype.init = function () {
+    Plugin.prototype.init = function (base) {
       $('<img/>').attr('src', base.imgs[base.current]).load(function() {
-        base.containers[1].css('background-image', 'url(' + base.imgs[base.current] + ')');
+        base.containers[(base.topContainer + 1) % 2].css('background-image', 'url(' + base.imgs[base.current] + ')');
+        if (base.num < 2){
+          base.containers[base.topContainer].fadeOut(base.o.duration,function () {
+            $(this).css("z-index","-2");
+            base.containers[(base.topContainer + 1) % 2].css("z-index","-1");
+          });
+          return;
+        }
         base.next_slide();
         setInterval(base.next_slide ,base.o.interval);
       });
